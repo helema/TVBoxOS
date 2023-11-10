@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.util.MD5;
-import com.github.tvbox.osc.util.js.SpiderJS;
 import com.lzy.okgo.OkGo;
 
 import org.json.JSONObject;
@@ -120,19 +119,6 @@ public class JarLoader {
     }
 
     public Spider getSpider(String key, String cls, String ext, String jar) {
-        if (cls.toLowerCase().endsWith(".js")) {
-            if (spiders.containsKey(key))
-                return spiders.get(key);
-            try {
-                SpiderJS sp = new SpiderJS(key, cls, ext);
-                sp.init(App.getInstance(), ext);
-                spiders.put(key, sp);
-                return sp;
-            } catch (Throwable th) {
-                th.printStackTrace();
-            }
-            return null;
-        }
         String clsKey = cls.replace("csp_", "");
         String jarUrl = "";
         String jarMd5 = "";
@@ -159,9 +145,9 @@ public class JarLoader {
         try {
             Spider sp = (Spider) classLoader.loadClass("com.github.catvod.spider." + clsKey).newInstance();
             sp.init(App.getInstance(), ext);
-            if (!jar.isEmpty()) {
-                sp.homeContent(false); // 增加此行 应该可以解决部分写的有问题源的历史记录问题 但会增加这个源的首次加载时间 不需要可以已删掉
-            }
+//            if (!jar.isEmpty()) {
+//                sp.homeContent(false); // 增加此行 应该可以解决部分写的有问题源的历史记录问题 但会增加这个源的首次加载时间 不需要可以已删掉
+//            }
             spiders.put(key, sp);
             return sp;
         } catch (Throwable th) {
